@@ -17,7 +17,7 @@ export function SetupButtons() {
   document.getElementById('process').addEventListener('click', () => {
     Proc()
   }
-  )
+    )
   document.getElementById('process_play').addEventListener('click', () => {
     if (globalEditor != null) {
       Proc()
@@ -111,6 +111,7 @@ export default function StrudelDemo() {
                 <br />
                 <button id="play" className="btn btn-outline-primary">Play</button>
                 <button id="stop" className="btn btn-outline-primary">Stop</button>
+                <button id="add1" className="btn btn-outline-primary">Add sound 1</button>
               </nav>
             </div>
           </div>
@@ -140,5 +141,52 @@ export default function StrudelDemo() {
   );
 
 
+}
+
+export default function workSpace() {
+    const hasRun = useRef(false);
+
+    useEffect(() => {
+
+        if (!hasRun.current) {
+            hasRun.current = true;
+            (async () => {
+                await initStrudel();
+
+                globalEditor = new StrudelMirror({
+                    defaultOutput: webaudioOutput,
+                    getTime: () => getAudioContext().currentTime,
+                    transpiler,
+                    root: document.getElementById('editor'),
+                    prebake: async () => {
+                        initAudioOnFirstClick(); // needed to make the browser happy (don't await this here..)
+                        const loadModules = evalScope(
+                            import('@strudel/core'),
+                            import('@strudel/draw'),
+                            import('@strudel/mini'),
+                            import('@strudel/tonal'),
+                            import('@strudel/webaudio'),
+                        );
+                        await Promise.all([loadModules, registerSynthSounds(), registerSoundfonts()]);
+                    },
+                });
+                Proc()
+            })();
+            document.getElementById('proc').value = stranger_tune
+            SetupButtons()
+        }
+
+    }, []);
+
+    return (
+        <div>
+            <h2>Strudel Workshop</h2>
+            <main>
+                <div className="container-fluid">
+
+                </div>
+            </main>
+        </div>
+    );
 }
 
