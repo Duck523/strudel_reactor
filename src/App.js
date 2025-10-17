@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { StrudelMirror } from '@strudel/codemirror';
 import { registerSoundfonts } from '@strudel/soundfonts';
 import { stranger_tune } from './tunes';
+import StartStopButton from './components/Buttons';
 
 let globalEditor = null;
 
@@ -12,8 +13,6 @@ let globalEditor = null;
 
 export function SetupButtons() {
 
-  document.getElementById('play').addEventListener('click', () => globalEditor.evaluate());
-  document.getElementById('stop').addEventListener('click', () => globalEditor.stop());
   document.getElementById('process').addEventListener('click', () => {
     Proc()
   }
@@ -57,7 +56,9 @@ export function ProcessText(match, ...args) {
 
 export default function StrudelDemo() {
 
-  const hasRun = useRef(false);
+    const hasRun = useRef(false);
+
+    const editorRef = useRef(null);
 
   useEffect(() => {
 
@@ -109,9 +110,7 @@ export default function StrudelDemo() {
                 <button id="process" className="btn btn-outline-primary">Preprocess</button>
                 <button id="process_play" className="btn btn-outline-primary">Proc & Play</button>
                 <br />
-                <button id="play" className="btn btn-outline-primary">Play</button>
-                <button id="stop" className="btn btn-outline-primary">Stop</button>
-                <button id="add1" className="btn btn-outline-primary">Add sound 1</button>
+                              <StartStopButton editorRef={editorRef }></StartStopButton>
               </nav>
             </div>
           </div>
