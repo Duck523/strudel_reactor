@@ -1,24 +1,16 @@
 import './cors-redirect';
 import './App.css';
 import { useEffect, useRef } from "react";
-import {
-    initStrudel,
-    evalScope,
-    getAudioContext,
-    webaudioOutput,
-    registerSynthSounds,
-    initAudioOnFirstClick,
-    transpiler
-} from "@strudel/web";
+import {initStrudel, evalScope, getAudioContext, webaudioOutput, registerSynthSounds, initAudioOnFirstClick, transpiler} from "@strudel/web";
 import { StrudelMirror } from "@strudel/codemirror";
 import { registerSoundfonts } from "@strudel/soundfonts";
 import { stranger_tune } from "./tunes";
 import { StartStopButton, ProcessButton } from "./components/Buttons";
 
 let globalEditor = null;
+window.globalEditor = null;
 
 export function ProcessText() {
-    // returns "_" if hush is selected, otherwise empty
     return document.getElementById("flexRadioDefault2").checked ? "_" : "";
 }
 
@@ -45,10 +37,8 @@ export default function StrudelDemo() {
         hasRun.current = true;
 
         (async () => {
-            try {
                 await initStrudel();
 
-                // ensure editorRef is attached
                 if (!editorRef.current) {
                     console.error("Editor DOM not found yet.");
                     return;
@@ -71,22 +61,18 @@ export default function StrudelDemo() {
                         await Promise.all([loadModules, registerSynthSounds(), registerSoundfonts()]);
                     },
                 });
-
-                // Wait one animation frame so StrudelMirror fully mounts
                 requestAnimationFrame(() => {
                     globalEditor = editor;
+                    window.globalEditor = editor;
 
                     const procEl = document.getElementById("proc");
                     if (procEl) {
                         procEl.value = stranger_tune;
-                        Proc(); // safe now
+                        Proc();
                     } else {
                         console.warn("Proc textarea not found.");
                     }
                 });
-            } catch (err) {
-                console.error("Init failed:", err);
-            }
         })();
     }, []);
 
