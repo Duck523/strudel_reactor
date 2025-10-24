@@ -6,6 +6,7 @@ import { StrudelMirror } from "@strudel/codemirror";
 import { registerSoundfonts } from "@strudel/soundfonts";
 import { stranger_tune } from "./tunes";
 import { StartStopButton, ProcessButton } from "./components/Buttons";
+import { VolumeSilder } from "./components/Slider";
 
 export function ProcessText() {
     return document.getElementById("flexRadioDefault2").checked ? "_" : "";
@@ -87,6 +88,10 @@ export default function StrudelDemo() {
                                 <StartStopButton editorInstance={editorInstance} />
                             </nav>
                         </div>
+                    </div>
+
+                    <div class="row">
+                        <VolumeSilder />
                     </div>
 
                     <div className="row">
