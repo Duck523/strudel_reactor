@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { initStrudel, evalScope, getAudioContext, webaudioOutput, registerSynthSounds, initAudioOnFirstClick, transpiler } from "@strudel/web";
 import { StrudelMirror } from "@strudel/codemirror";
 import { registerSoundfonts } from "@strudel/soundfonts";
-import { stranger_tune } from "./tunes";
 import { StartStopButton, ProcessButton } from "./components/Buttons";
-import { VolumeSilder } from "./components/Slider";
+import { VolumeSlider } from "./components/Slider";
+import { SelectTune } from "./components/SelectTune"
+import { tunes } from "./tunes";
 
 export function ProcessText() {
     return document.getElementById("flexRadioDefault2").checked ? "_" : "";
@@ -30,6 +31,7 @@ export default function StrudelDemo() {
     const editorRef = useRef(null);
     const procRef = useRef(null);
     const [editorInstance, setEditor] = useState(null);
+    const [masterGain, setMasterGain] = useState(null);
 
     useEffect(() => {
         if (hasRun.current) return;
@@ -37,6 +39,12 @@ export default function StrudelDemo() {
 
         (async () => {
             await initStrudel();
+
+            const context = getAudioContext();
+            const gain = context.createGain();
+            gain.gain.value = 0.5;
+            gain.connect(context.destination);
+            setMasterGain(gain);
 
             const editor = new StrudelMirror({
                 defaultOutput: webaudioOutput,
@@ -61,7 +69,7 @@ export default function StrudelDemo() {
 
                 const procEl = document.getElementById("proc");
                 if (procEl) {
-                    procEl.value = stranger_tune;
+                    procEl.value = tunes[0]; 
                     Proc(editor);
                 } else {
                     console.warn("Proc not working");
@@ -88,10 +96,21 @@ export default function StrudelDemo() {
                                 <StartStopButton editorInstance={editorInstance} />
                             </nav>
                         </div>
+
+                        <SelectTune
+                            onSelect={(selectedTune) => {
+                                const procEl = document.getElementById("proc");
+                                if (procEl) {
+                                    procEl.value = selectedTune;  
+                                    Proc(editorInstance);         
+                                    ProcAndPlay(editorInstance);  
+                                }
+                            }}
+                        />
                     </div>
 
                     <div class="row">
-                        <VolumeSilder />
+                        <VolumeSlider editorInstance={editorInstance} masterGain={masterGain} />
                     </div>
 
                     <div className="row">
