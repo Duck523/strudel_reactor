@@ -1,29 +1,26 @@
 import './cors-redirect';
 import './App.css';
-import { useEffect, useRef } from "react";
-import {initStrudel, evalScope, getAudioContext, webaudioOutput, registerSynthSounds, initAudioOnFirstClick, transpiler} from "@strudel/web";
+import { useEffect, useRef, useState } from "react";
+import { initStrudel, evalScope, getAudioContext, webaudioOutput, registerSynthSounds, initAudioOnFirstClick, transpiler } from "@strudel/web";
 import { StrudelMirror } from "@strudel/codemirror";
 import { registerSoundfonts } from "@strudel/soundfonts";
 import { stranger_tune } from "./tunes";
 import { StartStopButton, ProcessButton } from "./components/Buttons";
 
-let globalEditor = null;
-window.globalEditor = null;
-
 export function ProcessText() {
     return document.getElementById("flexRadioDefault2").checked ? "_" : "";
 }
 
-export function Proc() {
+export function Proc(editor) { 
     const procText = document.getElementById("proc").value;
     const replacedText = procText.replaceAll("<p1_Radio>", ProcessText());
-    globalEditor?.setCode(replacedText);
+    editor?.setCode(replacedText);
 }
 
-export function ProcAndPlay() {
-    if (globalEditor?.repl?.state?.started) {
-        Proc();
-        globalEditor.evaluate();
+export function ProcAndPlay(editor) {
+    if (editor?.repl?.state?.started) {
+        Proc(editor);
+        editor.evaluate();
     }
 }
 
@@ -31,51 +28,46 @@ export default function StrudelDemo() {
     const hasRun = useRef(false);
     const editorRef = useRef(null);
     const procRef = useRef(null);
+    const [editorInstance, setEditor] = useState(null);
 
     useEffect(() => {
         if (hasRun.current) return;
         hasRun.current = true;
 
         (async () => {
-                await initStrudel();
+            await initStrudel();
 
-                if (!editorRef.current) {
-                    console.error("Editor DOM not found yet.");
-                    return;
+            const editor = new StrudelMirror({
+                defaultOutput: webaudioOutput,
+                getTime: () => getAudioContext().currentTime,
+                transpiler,
+                root: editorRef.current,
+                prebake: async () => {
+                    initAudioOnFirstClick();
+                    const loadModules = evalScope(
+                        import("@strudel/core"),
+                        import("@strudel/draw"),
+                        import("@strudel/mini"),
+                        import("@strudel/tonal"),
+                        import("@strudel/webaudio")
+                    );
+                    await Promise.all([loadModules, registerSynthSounds(), registerSoundfonts()]);
+                },
+            });
+
+            requestAnimationFrame(() => {
+                setEditor(editor);
+
+                const procEl = document.getElementById("proc");
+                if (procEl) {
+                    procEl.value = stranger_tune;
+                    Proc(editor);
+                } else {
+                    console.warn("Proc not working");
                 }
-
-                const editor = new StrudelMirror({
-                    defaultOutput: webaudioOutput,
-                    getTime: () => getAudioContext().currentTime,
-                    transpiler,
-                    root: editorRef.current,
-                    prebake: async () => {
-                        initAudioOnFirstClick();
-                        const loadModules = evalScope(
-                            import("@strudel/core"),
-                            import("@strudel/draw"),
-                            import("@strudel/mini"),
-                            import("@strudel/tonal"),
-                            import("@strudel/webaudio")
-                        );
-                        await Promise.all([loadModules, registerSynthSounds(), registerSoundfonts()]);
-                    },
-                });
-                requestAnimationFrame(() => {
-                    globalEditor = editor;
-                    window.globalEditor = editor;
-
-                    const procEl = document.getElementById("proc");
-                    if (procEl) {
-                        procEl.value = stranger_tune;
-                        Proc();
-                    } else {
-                        console.warn("Proc textarea not found.");
-                    }
-                });
+            });
         })();
     }, []);
-
 
     return (
         <div>
@@ -91,8 +83,8 @@ export default function StrudelDemo() {
                         </div>
                         <div className="col-md-4">
                             <nav>
-                                <ProcessButton editorRef={{ current: globalEditor }} procRef={procRef} />
-                                <StartStopButton editorRef={{ current: globalEditor }} />
+                                <ProcessButton editorInstance={editorInstance} procRef={procRef} />
+                                <StartStopButton editorInstance={editorInstance} />
                             </nav>
                         </div>
                     </div>
@@ -108,7 +100,7 @@ export default function StrudelDemo() {
                                     type="radio"
                                     name="flexRadioDefault"
                                     id="flexRadioDefault1"
-                                    onChange={ProcAndPlay}
+                                    onChange={() => ProcAndPlay(editorInstance)}
                                     defaultChecked
                                 />
                                 <label className="form-check-label" htmlFor="flexRadioDefault1">
@@ -121,7 +113,7 @@ export default function StrudelDemo() {
                                     type="radio"
                                     name="flexRadioDefault"
                                     id="flexRadioDefault2"
-                                    onChange={ProcAndPlay}
+                                    onChange={() => ProcAndPlay(editorInstance)}
                                 />
                                 <label className="form-check-label" htmlFor="flexRadioDefault2">
                                     p1: HUSH
