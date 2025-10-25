@@ -1,6 +1,6 @@
 
 
-const stranger_tune = `setcps(0.7);
+export const stranger_tune = `setcps(0.7);
 
 <p1_Radio>p1: n("1 1 1 6 7 6 4 2")
   .scale("<c3:major>/2")
