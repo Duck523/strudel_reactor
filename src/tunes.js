@@ -100,41 +100,40 @@ stack(
 // all(x => x.log())
 
 // @version 1.2`;
-const jump_tune = `setcps(2.166); 
 
-<p1_Bass>p1: n("0 0 2 4 5 4 2 0")
-  .scale("c3:minor")
-  .s("bass")
-  .gain(0.8)
-  .legato(1.2);
+export const jump_tune = `setcps(140/60/4)
+// --- SAMPLE SOURCES ---
+samples('github:algorave-dave/samples')
+samples('https://raw.githubusercontent.com/tidalcycles/Dirt-Samples/master/strudel.json')
+samples('https://raw.githubusercontent.com/Mittans/tidal-drum-machines/main/machines/tidal-drum-machines.json')
+// --- PATTERNS ---
+const gain_patterns = [
+  "1",
+  "{0.8 1.2 0.6 1.4}%8",
+  "{0.75 1.5 1 1.25}%16"
+]
+const drum_structure = [
+  "x*4",
+  "x*2 [~ x]*2",
+  "{x x ~ x}%8"
+]
+const basslines = [
+  "0 0 2 4 5 4 2 0",
+  "0 0 7 7 9 9 7",
+  "0 4 7 12 11 7 4 0"
+]
+const pattern = 0
+// --- BASS ---
+n(pick(basslines, 0))
+  .scale('c3:minor')
+  .s('bass')
+  .gain(0.9)
+  .legato(1.2)
+  .lpf(400)
+  .postgain(pick(gain_patterns, pattern))
+`;
 
-<p2_Synth>p2: n("0 0 7 7 9 9 7")
-  .scale("c4:maj")
-  .s("supersaw")
-  .gain(0.7)
-  .legato(1)
-  .distort(0.3)
-  .lpf(perlin.slow(2).range(200, 2000));
 
-<p3_Arp>p3: n("0 4 7 12 11 7 4 0")
-  .scale("c4:maj")
-  .s("supersaw")
-  .gain(0.5)
-  .legato(0.5)
-  .pan("<0 1>")
-  .superimpose(x => x.detune("<0.5>"));
 
-<p4_Drums>p4: stack(
-  s("bd*4").gain(0.9),
-  s("hh*8").gain(0.5),
-  s("sd").every(2, s => s.gain(0.8))
-);
-
-<fx>fx: stack(
-  $.room(0.4),
-  $.delay(0.2)
-);
-
-// @version 1.0 - Van Halen "Jump" approximation`;
 
 export const tunes = [stranger_tune, jump_tune];

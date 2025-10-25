@@ -7,10 +7,11 @@ import { initAudioOnFirstClick } from '@strudel/webaudio';
 import { transpiler } from '@strudel/transpiler';
 import { getAudioContext, webaudioOutput, registerSynthSounds } from '@strudel/webaudio';
 import { registerSoundfonts } from '@strudel/soundfonts';
-import { stranger_tune } from './tunes';
+import { stranger_tune, tunes } from './tunes';
 import console_monkey_patch, { getD3Data } from './console-monkey-patch';
 import { StartStopButton, ProcessButton } from './components/Buttons'
 import { PreprocessText } from './components/SongText'
+import { SelectTune } from './components/SelectTune'
 
 let globalEditor = null;
 
@@ -79,8 +80,22 @@ export default function StrudelDemo() {
         }
     }
 
-   // const { song, setSong } = useState(stranger_tune);
-    const [ songText, setSongText ] = useState(stranger_tune);
+
+   
+    const [songText, setSongText] = useState(stranger_tune);
+    const [tuneIndex, setTuneIndex] = useState(0);
+
+    const pickSong = (e) => {
+        const index = parseInt(e.target.value);
+        const newSongText = tunes[index]
+
+        setTuneIndex(index);
+        setSongText(newSongText);
+
+        if (globalEditor) {
+            globalEditor.setCode(newSongText);
+        }
+    }
 
     useEffect(() => {
 
@@ -119,7 +134,9 @@ export default function StrudelDemo() {
             //SetupButtons()
             //Proc()
         }
+
         globalEditor.setCode(songText);
+
     }, [songText]);
 
 
@@ -131,7 +148,7 @@ export default function StrudelDemo() {
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-md-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                            <PreprocessText defaultValue={songText} onChange={(e) => setSongText(e.target.value)} />
+                            <PreprocessText value={songText} onChange={(e) => setSongText(e.target.value)} />
                         </div>
                         <div className="col-md-4">
 
@@ -139,6 +156,7 @@ export default function StrudelDemo() {
                                 <br />
                                 <StartStopButton OnPlay={handlePlay} OnStop={handleStop} />
                             </nav>
+                            <SelectTune value={tuneIndex} onChange={pickSong } />
                         </div>
                     </div>
                     <div className="row">
