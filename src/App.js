@@ -1,5 +1,5 @@
 import './App.css';
-import { useEffect, useRef } from "react";
+import { Component, useEffect, useRef, useState } from "react";
 import { StrudelMirror } from '@strudel/codemirror';
 import { evalScope } from '@strudel/core';
 import { drawPianoroll } from '@strudel/draw';
@@ -9,7 +9,8 @@ import { getAudioContext, webaudioOutput, registerSynthSounds } from '@strudel/w
 import { registerSoundfonts } from '@strudel/soundfonts';
 import { stranger_tune } from './tunes';
 import console_monkey_patch, { getD3Data } from './console-monkey-patch';
-import {StartStopButton} from './components/Buttons'
+import { StartStopButton, ProcessButton } from './components/Buttons'
+import { PreprocessText } from './components/SongText'
 
 let globalEditor = null;
 
@@ -78,6 +79,9 @@ export default function StrudelDemo() {
         }
     }
 
+   // const { song, setSong } = useState(stranger_tune);
+    const [ songText, setSongText ] = useState(stranger_tune);
+
     useEffect(() => {
 
         if (!hasRun.current) {
@@ -115,8 +119,8 @@ export default function StrudelDemo() {
             //SetupButtons()
             //Proc()
         }
-
-    }, []);
+        globalEditor.setCode(songText);
+    }, [songText]);
 
 
     return (
@@ -127,14 +131,11 @@ export default function StrudelDemo() {
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-md-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                            <label htmlFor="exampleFormControlTextarea1" className="form-label">Text to preprocess:</label>
-                            <textarea className="form-control" rows="15" id="proc" ></textarea>
+                            <PreprocessText defaultValue={songText} onChange={(e) => setSongText(e.target.value)} />
                         </div>
                         <div className="col-md-4">
 
                             <nav>
-                                <button id="process" className="btn btn-outline-primary">Preprocess</button>
-                                <button id="process_play" className="btn btn-outline-primary">Proc & Play</button>
                                 <br />
                                 <StartStopButton OnPlay={handlePlay} OnStop={handleStop} />
                             </nav>
