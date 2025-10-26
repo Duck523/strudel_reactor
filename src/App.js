@@ -97,6 +97,10 @@ export default function StrudelDemo() {
         }
     }
 
+    const changeeVolume = () => {
+        const masterGain = 0.5;
+    }
+
     useEffect(() => {
 
         if (!hasRun.current) {
