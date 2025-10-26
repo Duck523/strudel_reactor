@@ -7,7 +7,7 @@ samples('github:algorave-dave/samples')
 samples('https://raw.githubusercontent.com/tidalcycles/Dirt-Samples/master/strudel.json')
 samples('https://raw.githubusercontent.com/Mittans/tidal-drum-machines/main/machines/tidal-drum-machines.json')
 
-const masterGain = 0.8;
+const masterGain = 0.5;
 
 const gain_patterns = [
   "2",
@@ -100,17 +100,14 @@ stack(
 )
 all(x => x.postgain(masterGain))
 //Remixed and reproduced from Algorave Dave's code found here: https://www.youtube.com/watch?v=ZCcpWzhekEY
-// all(x => x.gain(mouseX.range(0,1)))
-// all(x => x.log())
 
 // @version 1.2`;
 
 export const jump_tune = `setcps(140/60/4)
-// --- SAMPLE SOURCES ---
 samples('github:algorave-dave/samples')
 samples('https://raw.githubusercontent.com/tidalcycles/Dirt-Samples/master/strudel.json')
 samples('https://raw.githubusercontent.com/Mittans/tidal-drum-machines/main/machines/tidal-drum-machines.json')
-// --- PATTERNS ---
+const masterGain = 0.5;
 const gain_patterns = [
   "1",
   "{0.8 1.2 0.6 1.4}%8",
@@ -127,7 +124,7 @@ const basslines = [
   "0 4 7 12 11 7 4 0"
 ]
 const pattern = 0
-// --- BASS ---
+
 n(pick(basslines, 0))
   .scale('c3:minor')
   .s('bass')
@@ -135,6 +132,9 @@ n(pick(basslines, 0))
   .legato(1.2)
   .lpf(400)
   .postgain(pick(gain_patterns, pattern))
+
+
+all(x => x.postgain(masterGain))
 `;
 
 

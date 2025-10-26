@@ -12,6 +12,7 @@ import console_monkey_patch, { getD3Data } from './console-monkey-patch';
 import { StartStopButton, ProcessButton } from './components/Buttons'
 import { PreprocessText } from './components/SongText'
 import { SelectTune } from './components/SelectTune'
+import { VolumeSlider } from './components/Slider';
 
 let globalEditor = null;
 
@@ -97,8 +98,19 @@ export default function StrudelDemo() {
         }
     }
 
-    const changeeVolume = () => {
-        const masterGain = 0.5;
+    const [volume, setVolume] = useState(0.5);
+    const changeVolume = (newVolume) => {
+        setVolume(newVolume);
+
+        const newText = songText.replace(
+            /const masterGain = [0-9.]+;/,
+            `const masterGain = ${newVolume};`
+        );
+
+        setSongText(newText);
+
+        globalEditor.setCode(newText);
+
     }
 
     useEffect(() => {
@@ -138,9 +150,7 @@ export default function StrudelDemo() {
             //SetupButtons()
             //Proc()
         }
-
         globalEditor.setCode(songText);
-
     }, [songText]);
 
 
@@ -159,6 +169,9 @@ export default function StrudelDemo() {
                             <nav>
                                 <br />
                                 <StartStopButton OnPlay={handlePlay} OnStop={handleStop} />
+                                <div className="col-md-4">
+                                    <VolumeSlider value={volume} onChange={changeVolume} />
+                                </div>
                             </nav>
                             <SelectTune value={tuneIndex} onChange={pickSong } />
                         </div>
