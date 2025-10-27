@@ -9,6 +9,12 @@ samples('https://raw.githubusercontent.com/Mittans/tidal-drum-machines/main/mach
 
 const masterGain = 0.5;
 
+const drums = 0.6;
+
+const drums2Stack = 0.6;
+
+const drums2S = 0.1;
+
 const gain_patterns = [
   "2",
   "{0.75 2.5}*4",
@@ -51,7 +57,7 @@ note(pick(basslines, bass))
 .room(0.6)
 .lpf(700)
 .room(0.4)
-.postgain(pick(gain_patterns, pattern))
+.postgain(pick(gain_patterns, pattern)).gain(0.5)
 
 
 main_arp: 
@@ -75,7 +81,7 @@ stack(
   s("sh").struct("[x!3 ~!2 x!10 ~]")
   .postgain(0.5).lpf(7000)
   .bank("RolandTR808")
-  .speed(0.8).jux(rev).room(sine.range(0.1,0.4)).gain(0.6),
+  .speed(0.8).jux(rev).room(sine.range(0.1,0.4)).gain(drums),
 
   s("{~ ~ rim ~ cp ~ rim cp ~!2 rim ~ cp ~ < rim ~ >!2}%8 *2")
   .bank("[KorgDDM110, OberheimDmx]").speed(1.2)
@@ -86,13 +92,13 @@ drums2:
 stack(
   s("[~ hh]*4").bank("RolandTR808").room(0.3).speed(0.75).gain(1.2),
   s("hh").struct("x*16").bank("RolandTR808")
-  .gain(0.6)
+  .gain(drums2Stack)
   .jux(rev)
   .room(sine.range(0.1,0.4))
   .postgain(0.5),
   
   s("[psr:[2|5|6|7|8|9|12|24|25]*16]?0.1")
-  .gain(0.1)
+  .gain(drums2S)
   .postgain(pick(gain_patterns, pattern))
   .hpf(1000)
   .speed(0.5)

@@ -13,6 +13,7 @@ import { StartStopButton, ProcessButton } from './components/Buttons'
 import { PreprocessText } from './components/SongText'
 import { SelectTune } from './components/SelectTune'
 import { VolumeSlider } from './components/Slider';
+import { PickSounds } from './components/CheckBox';
 
 let globalEditor = null;
 
@@ -113,6 +114,28 @@ export default function StrudelDemo() {
 
     }
 
+    const [gains, setGains] = useState({
+        drums : 0.6,
+        drums2Stack : 0.6,
+        drums2S: 0.1,
+    })
+    const pickInstruments = (instrument, newGain) => {
+        setGains(newValue => ({ ...newValue, [instrument]: newGain }));
+
+        let newText = songText;
+
+        Object.keys(gains).forEach(inst => {
+            const regex = new RegExp(`const ${inst} = [0-9.]+;`);
+            newText = newText.replace(regex, `const ${inst} = ${gains[inst]};`);
+        });
+
+        setSongText(newText);
+        if (globalEditor) {
+            globalEditor.setCode(newText);
+        }
+            }
+        
+
     useEffect(() => {
 
         if (!hasRun.current) {
@@ -171,6 +194,11 @@ export default function StrudelDemo() {
                                 <StartStopButton OnPlay={handlePlay} OnStop={handleStop} />
                                 <div className="col-md-4">
                                     <VolumeSlider value={volume} onChange={changeVolume} />
+                                 
+                                </div>
+                                <div className="col-md-4">
+                                    
+                                    <PickSounds values={gains} onClick={pickInstruments} />
                                 </div>
                             </nav>
                             <SelectTune value={tuneIndex} onChange={pickSong } />
