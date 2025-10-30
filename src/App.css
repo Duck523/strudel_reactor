@@ -37,6 +37,22 @@
   }
 }
 
+.background {
+    background: #2b2b3d;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.textarea-container {
+    background: #2b2b3d;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
 #editor {
     background: #1f1f2e;
     border-radius: 6px;

@@ -183,22 +183,18 @@ export default function StrudelDemo() {
 
 
     return (
-        <div>
             <div className="App">
                 <h2>Strudel Demo</h2>
+                <div className="background">
                 <main>
                     <div className="container-fluid">
-                        <div className="row col-md-8 app-logo"></div>
+                        <div className="row col-md-8"></div>
 
                         <div className="row">
-                            <div
-                                className="col-md-8"
-                                style={{ maxHeight: '50vh', overflowY: 'auto' }}
-                            >
-                                <PreprocessText
-                                    value={songText}
-                                    onChange={(e) => setSongText(e.target.value)}
-                                />
+                            <div className="col-md-8">
+                                <div className="textarea-container">
+                                    <PreprocessText value={songText} onChange={(e) => setSongText(e.target.value)} />
+                                </div>
                             </div>
 
                             <div className="col-md-4">
