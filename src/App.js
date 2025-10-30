@@ -69,6 +69,7 @@ const handleD3Data = (event) => {
 export default function StrudelDemo() {
 
     const hasRun = useRef(false);
+    const editorRef = useRef(null)
 
     const handlePlay = () => {
         if (globalEditor) {
@@ -149,11 +150,12 @@ export default function StrudelDemo() {
             canvas.height = canvas.height * 2;
             const drawContext = canvas.getContext('2d');
             const drawTime = [-2, 2]; // time window of drawn haps
+            if (editorRef.current) { 
             globalEditor = new StrudelMirror({
                 defaultOutput: webaudioOutput,
                 getTime: () => getAudioContext().currentTime,
                 transpiler,
-                root: document.getElementById('editor'),
+                root: editorRef.current,
                 drawTime,
                 onDraw: (haps, time) => drawPianoroll({ haps, time, ctx: drawContext, drawTime, fold: 0 }),
                 prebake: async () => {
@@ -168,67 +170,92 @@ export default function StrudelDemo() {
                     await Promise.all([loadModules, registerSynthSounds(), registerSoundfonts()]);
                 },
             });
-
-            document.getElementById('proc').value = stranger_tune
+        }
+            const procElem = document.getElementById('proc');
+            if (procElem) procElem.value = stranger_tune;
             //SetupButtons()
             //Proc()
         }
-        globalEditor.setCode(songText);
+        if (globalEditor) { 
+            globalEditor.setCode(songText);
+        }
     }, [songText]);
 
 
     return (
         <div>
-            <h2>Strudel Demo</h2>
-            <main>
+            <div className="App">
+                <h2>Strudel Demo</h2>
+                <main>
+                    <div className="container-fluid">
+                        <div className="row col-md-8 app-logo"></div>
 
-                <div className="container-fluid">
-                    <div className="row">
-                        <div className="col-md-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                            <PreprocessText value={songText} onChange={(e) => setSongText(e.target.value)} />
-                        </div>
-                        <div className="col-md-4">
+                        <div className="row">
+                            <div
+                                className="col-md-8"
+                                style={{ maxHeight: '50vh', overflowY: 'auto' }}
+                            >
+                                <PreprocessText
+                                    value={songText}
+                                    onChange={(e) => setSongText(e.target.value)}
+                                />
+                            </div>
 
-                            <nav>
-                                <br />
-                                <StartStopButton OnPlay={handlePlay} OnStop={handleStop} />
-                                <div className="col-md-4">
-                                    <VolumeSlider value={volume} onChange={changeVolume} />
-                                 
-                                </div>
-                                <div className="col-md-4">
-                                    
-                                    <PickSounds values={gains} onClick={pickInstruments} />
-                                </div>
-                            </nav>
-                            <SelectTune value={tuneIndex} onChange={pickSong } />
+                            <div className="col-md-4">
+                                <nav>
+                                    <br />
+                                    <StartStopButton
+                                        OnPlay={handlePlay}
+                                        OnStop={handleStop}
+                                    />
+                                    <div className="col-md-4">
+                                        <VolumeSlider
+                                            value={volume}
+                                            onChange={changeVolume}
+                                        />
+                                    </div>
+                                    <div className="col-md-4">
+                                        <PickSounds
+                                            values={gains}
+                                            onClick={pickInstruments}
+                                        />
+                                    </div>
+                                </nav>
+
+                                <SelectTune
+                                    value={tuneIndex}
+                                    onChange={pickSong}
+                                />
+                            </div>
                         </div>
                     </div>
+
                     <div className="row">
-                        <div className="col-md-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                            <div id="editor" />
+                        <div
+                            className="col-md-12"
+                            style={{ maxHeight: '50vh', overflowY: 'auto' }}
+                        >
+                            <div
+                                ref={editorRef}
+                                id="editor"
+                                style={{ marginBottom: '1rem' }}
+                            />
                             <div id="output" />
-                        </div>
-                        <div className="col-md-4">
-                            <div className="form-check">
-                              
-                                <label className="form-check-label" htmlFor="flexRadioDefault1">
-                                    p1: ON
-                                </label>
-                            </div>
-                            <div className="form-check">
-                             
-                                <label className="form-check-label" htmlFor="flexRadioDefault2">
-                                    p1: HUSH
-                                </label>
-                            </div>
+                            <canvas
+                                id="roll"
+                                style={{
+                                    width: '100%',
+                                    height: '200px',
+                                    border: '1px solid #ccc',
+                                }}
+                            />
                         </div>
                     </div>
-                </div>
-                <canvas id="roll"></canvas>
-            </main >
-        </div >
+                </main>
+            </div>
+        </div>
     );
 
+        
 
 }

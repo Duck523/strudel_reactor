@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+#editor {
+    background: #1f1f2e;
+    border-radius: 6px;
+    padding: 0.5rem;
+    min-height: 200px;
+    overflow-y: auto;
+}
