@@ -69,7 +69,8 @@ const handleD3Data = (event) => {
 export default function StrudelDemo() {
 
     const hasRun = useRef(false);
-    const editorRef = useRef(null)
+    const editorRef = useRef(null);
+    const canvasRef = useRef(null);
 
     const handlePlay = () => {
         if (globalEditor) {
@@ -82,10 +83,9 @@ export default function StrudelDemo() {
             globalEditor.stop()
         }
     }
-
-
    
     const [songText, setSongText] = useState(stranger_tune);
+    const [orginalText] = useState(songText);
     const [tuneIndex, setTuneIndex] = useState(0);
 
     const pickSong = (e) => {
@@ -115,26 +115,40 @@ export default function StrudelDemo() {
 
     }
 
-    const [gains, setGains] = useState({
-        drums : 0.6,
-        drums2Stack : 0.6,
-        drums2S: 0.1,
+    const [instruments, setInstrument] = useState({
+        drums : true,
+        drums2Stack : true,
+        drums2S: true,
     })
-    const pickInstruments = (instrument, newGain) => {
-        setGains(newValue => ({ ...newValue, [instrument]: newGain }));
 
-        let newText = songText;
+    const pickInstruments = (instrument) => {
+        setInstrument((prev) => {
+            const isOn = prev[instrument];
+            const newStatus = { ...prev, [instrument]: !isOn };
 
-        Object.keys(gains).forEach(inst => {
-            const regex = new RegExp(`const ${inst} = [0-9.]+;`);
-            newText = newText.replace(regex, `const ${inst} = ${gains[inst]};`);
-        });
+            let newText = songText;
 
-        setSongText(newText);
-        if (globalEditor) {
-            globalEditor.setCode(newText);
-        }
+            if (isOn) {
+                const regex = new RegExp(`${instrument}:([\\s\\S]*?)(?=\\n\\w+:|$)`);
+                newText = newText.replace(regex, `${instrument}:\n  s("-")\n`);
+            } else {
+                const orginal = orginalText.match(new RegExp(`${instrument}:([\\s\\S]*?)(?=\\n\\w+:|$)`));
+
+                if (orginal) {
+                    newText = newText.replace(new RegExp(`${instrument}:([\\s\\S]*?)(?=\\n\\w+:|$)`), orginal[0]);
+                }
             }
+
+            setSongText(newText);
+            if (globalEditor) {
+                globalEditor.setCode(newText);
+            }
+
+            return newStatus;
+        });
+    };
+
+
         
 
     useEffect(() => {
@@ -145,7 +159,10 @@ export default function StrudelDemo() {
             hasRun.current = true;
             //Code copied from example: https://codeberg.org/uzu/strudel/src/branch/main/examples/codemirror-repl
             //init canvas
-            const canvas = document.getElementById('roll');
+            const canvas = canvasRef.current;
+            if (!canvas) {
+                return;
+            }
             canvas.width = canvas.width * 2;
             canvas.height = canvas.height * 2;
             const drawContext = canvas.getContext('2d');
@@ -198,6 +215,7 @@ export default function StrudelDemo() {
                             </div>
 
                             <div className="col-md-4">
+                            <div className="button-container">
                                 <nav>
                                     <br />
                                     <StartStopButton
@@ -212,8 +230,8 @@ export default function StrudelDemo() {
                                     </div>
                                     <div className="col-md-4">
                                         <PickSounds
-                                            values={gains}
-                                            onClick={pickInstruments}
+                                            values={instruments}
+                                            onToggle={pickInstruments}
                                         />
                                     </div>
                                 </nav>
@@ -222,31 +240,20 @@ export default function StrudelDemo() {
                                     value={tuneIndex}
                                     onChange={pickSong}
                                 />
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <div className="row">
-                        <div
-                            className="col-md-12"
-                            style={{ maxHeight: '50vh', overflowY: 'auto' }}
-                        >
-                            <div
-                                ref={editorRef}
-                                id="editor"
-                                style={{ marginBottom: '1rem' }}
-                            />
+                        <div className="col-md-12" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
+                            <div ref={editorRef} id="editor" style={{ marginBottom: '1rem' }}/>
                             <div id="output" />
-                            <canvas
-                                id="roll"
-                                style={{
-                                    width: '100%',
-                                    height: '200px',
-                                    border: '1px solid #ccc',
-                                }}
-                            />
+                            <div className="canvas-container">
+                                    <canvas ref={canvasRef}  id="roll" style={{ width: '100%', height: '200px', border: '1px solid #ccc', }} />
+                            </div>
                         </div>
-                    </div>
+                        </div>
                 </main>
             </div>
         </div>

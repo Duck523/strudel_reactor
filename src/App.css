@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  color: white;
 }
 
 .App-logo {
@@ -53,10 +54,26 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
+.canvas-container {
+    background: #2b2b3d; 
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
 #editor {
     background: #1f1f2e;
     border-radius: 6px;
     padding: 0.5rem;
     min-height: 200px;
     overflow-y: auto;
+}
+
+.button-container {
+    background: #2b2b3d;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
