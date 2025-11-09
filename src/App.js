@@ -15,63 +15,20 @@ import { SelectTune } from './components/SelectTune'
 import { VolumeSlider } from './components/Slider';
 import { PickSounds } from './components/CheckBox';
 
+//globalEditior starts off as null
 let globalEditor = null;
 
 const handleD3Data = (event) => {
     console.log(event.detail);
 };
 
-//export function SetupButtons() {
-
-//    document.getElementById('play').addEventListener('click', () => globalEditor.evaluate());
-//    document.getElementById('stop').addEventListener('click', () => globalEditor.stop());
-//    document.getElementById('process').addEventListener('click', () => {
-//        Proc()
-//    }
-//    )
-//    document.getElementById('process_play').addEventListener('click', () => {
-//        if (globalEditor != null) {
-//            Proc()
-//            globalEditor.evaluate()
-//        }
-//    }
-//    )
-//}
-
-
-
-//export function ProcAndPlay() {
-//    if (globalEditor != null && globalEditor.repl.state.started == true) {
-//        console.log(globalEditor)
-//        Proc()
-//        globalEditor.evaluate();
-//    }
-//}
-
-//export function Proc() {
-
-//    let proc_text = document.getElementById('proc').value
-//    let proc_text_replaced = proc_text.replaceAll('<p1_Radio>', ProcessText);
-//    ProcessText(proc_text);
-//    globalEditor.setCode(proc_text_replaced)
-//}
-
-//export function ProcessText(match, ...args) {
-
-//    let replace = ""
-//    if (document.getElementById('flexRadioDefault2').checked) {
-//        replace = "_"
-//    }
-
-//    return replace
-//}
-
 export default function StrudelDemo() {
-
+    //using hasRun editorRef and canvasRef to swithc from DOM to react implmentation 
     const hasRun = useRef(false);
     const editorRef = useRef(null);
     const canvasRef = useRef(null);
 
+    //setting the globalEditor to either evlautate the studel text or stop 
     const handlePlay = () => {
         if (globalEditor) {
             globalEditor.evaluate()
@@ -83,14 +40,18 @@ export default function StrudelDemo() {
             globalEditor.stop()
         }
     }
-   
+
+    //these values are for the strudle text if the user switches which song is being played  orginal text is for when the insturments are muted savinf the orginal state.
     const [songText, setSongText] = useState(stranger_tune);
     const [orginalText] = useState(songText);
     const [tuneIndex, setTuneIndex] = useState(0);
 
+    //getting the index of the song in the tunes list passed from the tunes.js
     const pickSong = (e) => {
         const index = parseInt(e.target.value);
         const newSongText = tunes[index]
+
+        //once the correct index is retreived the songText and index is set 
 
         setTuneIndex(index);
         setSongText(newSongText);
@@ -100,6 +61,7 @@ export default function StrudelDemo() {
         }
     }
 
+    //The volume is started at 50 percent and once the slider is used it is updated depedning on the slider amount
     const [volume, setVolume] = useState(0.5);
     const changeVolume = (newVolume) => {
         setVolume(newVolume);
@@ -115,9 +77,10 @@ export default function StrudelDemo() {
 
     }
 
+    //This will work better once I include every instrument in the values but it will search the text for these varaibles and change all values - to silience that section 
     const [instruments, setInstrument] = useState({
         drums : true,
-        drums2Stack : true,
+        drums2 : true,
         drums2S: true,
     })
 
@@ -128,6 +91,7 @@ export default function StrudelDemo() {
 
             let newText = songText;
 
+            //searches for the part that matches the intrument in the regex and replaces the text woth - else if the box is checked it reverts back to the orgnial format 
             if (isOn) {
                 const regex = new RegExp(`${instrument}:([\\s\\S]*?)(?=\\n\\w+:|$)`);
                 newText = newText.replace(regex, `${instrument}:\n  s("-")\n`);

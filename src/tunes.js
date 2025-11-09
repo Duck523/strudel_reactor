@@ -9,12 +9,6 @@ samples('https://raw.githubusercontent.com/Mittans/tidal-drum-machines/main/mach
 
 const masterGain = 0.5;
 
-const drums = 0.6;
-
-const drums2Stack = 0.6;
-
-const drums2S = 0.1;
-
 const gain_patterns = [
   "2",
   "{0.75 2.5}*4",
@@ -109,6 +103,8 @@ all(x => x.postgain(masterGain))
 
 // @version 1.2`;
 
+//notice that in the tunes there is a all all(x => x.postgain(masterGain)) this is how the volume is updated with the const MasterGain
+
 export const song2 = `setcps(140/60/4)
 samples('github:algorave-dave/samples')
 samples('https://raw.githubusercontent.com/tidalcycles/Dirt-Samples/master/strudel.json')
@@ -139,8 +135,7 @@ n(pick(basslines, 0))
   .lpf(400)
   .postgain(pick(gain_patterns, pattern))
 
-
-all(x => x.postgain(masterGain))
+//all(x => x.postgain(masterGain))
 `;
 
 
