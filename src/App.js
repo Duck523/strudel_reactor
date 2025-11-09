@@ -164,10 +164,10 @@ export default function StrudelDemo() {
 
 
     return (
-            <div className="App">
-                <h2>Strudel Demo</h2>
-                <div className="background">
+        <div className="App">
+            <div className="background">
                 <main>
+                    <h2>Strudel Editor</h2>
                     <div className="container-fluid">
                         <div className="row col-md-8"></div>
 
@@ -179,31 +179,31 @@ export default function StrudelDemo() {
                             </div>
 
                             <div className="col-md-4">
-                            <div className="button-container">
-                                <nav>
-                                    <br />
-                                    <StartStopButton
-                                        OnPlay={handlePlay}
-                                        OnStop={handleStop}
-                                    />
-                                    <div className="col-md-4">
-                                        <VolumeSlider
-                                            value={volume}
-                                            onChange={changeVolume}
+                                <div className="button-container">
+                                    <nav>
+                                        <br />
+                                        <StartStopButton
+                                            OnPlay={handlePlay}
+                                            OnStop={handleStop}
                                         />
-                                    </div>
-                                    <div className="col-md-4">
-                                        <PickSounds
-                                            values={instruments}
-                                            onToggle={pickInstruments}
-                                        />
-                                    </div>
-                                </nav>
+                                        <div className="col-md-4">
+                                            <VolumeSlider
+                                                value={volume}
+                                                onChange={changeVolume}
+                                            />
+                                        </div>
+                                        <div className="col-md-4">
+                                            <PickSounds
+                                                values={instruments}
+                                                onToggle={pickInstruments}
+                                            />
+                                        </div>
+                                    </nav>
 
-                                <SelectTune
-                                    value={tuneIndex}
-                                    onChange={pickSong}
-                                />
+                                    <SelectTune
+                                        value={tuneIndex}
+                                        onChange={pickSong}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -211,13 +211,14 @@ export default function StrudelDemo() {
 
                     <div className="row">
                         <div className="col-md-12" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                            <div ref={editorRef} id="editor" style={{ marginBottom: '1rem' }}/>
+                            <div ref={editorRef} id="editor" style={{ marginBottom: '1rem' }} />
                             <div id="output" />
-                            <div className="canvas-container">
-                                    <canvas ref={canvasRef}  id="roll" style={{ width: '100%', height: '200px', border: '1px solid #ccc', }} />
-                            </div>
                         </div>
+
+                        <div className="canvas-container">
+                            <canvas ref={canvasRef} id="roll" style={{ width: '100%', height: '200px', border: '1px solid #ccc' }} />
                         </div>
+                    </div>
                 </main>
             </div>
         </div>
