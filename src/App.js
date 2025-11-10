@@ -192,16 +192,18 @@ export default function StrudelDemo() {
                                         </div>
                                     </nav>
 
-                                    <SelectTune value={tuneIndex} onChange={pickSong}/>
+                                    <SelectTune value={tuneIndex} onChange={pickSong} />
+
+
+                                </div>
+
+                                <div className="mt-4">
+                                    <D3VolumeChart data={[{ label: 'volume', value: volume }]} />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col-md-4">
-                            <D3VolumeChart data={[{ label: 'volume', value: volume}]}/>
-                        </div>
-                    </div>
+                    
 
                     <div className="row">
                         <div className="col-md-12" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
