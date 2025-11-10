@@ -14,6 +14,7 @@ import { PreprocessText } from './components/SongText'
 import { SelectTune } from './components/SelectTune'
 import { VolumeSlider } from './components/Slider';
 import { PickSounds } from './components/CheckBox';
+import { d3VolumeChart } from './components/D3';
 
 //globalEditior starts off as null
 let globalEditor = null;
@@ -81,7 +82,7 @@ export default function StrudelDemo() {
     const [instruments, setInstrument] = useState({
         drums : true,
         drums2 : true,
-        drums2S: true,
+        bassline: true,
     })
 
     const pickInstruments = (instrument) => {
@@ -182,30 +183,23 @@ export default function StrudelDemo() {
                                 <div className="button-container">
                                     <nav>
                                         <br />
-                                        <StartStopButton
-                                            OnPlay={handlePlay}
-                                            OnStop={handleStop}
-                                        />
+                                        <StartStopButton OnPlay={handlePlay} OnStop={handleStop}/>
                                         <div className="col-md-4">
-                                            <VolumeSlider
-                                                value={volume}
-                                                onChange={changeVolume}
-                                            />
+                                            <VolumeSlider value={volume} onChange={changeVolume}/>
                                         </div>
                                         <div className="col-md-4">
-                                            <PickSounds
-                                                values={instruments}
-                                                onToggle={pickInstruments}
-                                            />
+                                            <PickSounds values={instruments} onToggle={pickInstruments}/>
                                         </div>
                                     </nav>
 
-                                    <SelectTune
-                                        value={tuneIndex}
-                                        onChange={pickSong}
-                                    />
+                                    <SelectTune value={tuneIndex} onChange={pickSong}/>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-md-4">
+                            <d3VolumeChar data={[{ label: 'volume', value: volume}]}/>
                         </div>
                     </div>
 
