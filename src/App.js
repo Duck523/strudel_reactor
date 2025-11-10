@@ -14,7 +14,7 @@ import { PreprocessText } from './components/SongText'
 import { SelectTune } from './components/SelectTune'
 import { VolumeSlider } from './components/Slider';
 import { PickSounds } from './components/CheckBox';
-import { d3VolumeChart } from './components/D3';
+import  D3VolumeChart  from './components/D3';
 
 //globalEditior starts off as null
 let globalEditor = null;
@@ -199,7 +199,7 @@ export default function StrudelDemo() {
                     </div>
                     <div className="row">
                         <div className="col-md-4">
-                            <d3VolumeChar data={[{ label: 'volume', value: volume}]}/>
+                            <D3VolumeChart data={[{ label: 'volume', value: volume}]}/>
                         </div>
                     </div>
 
