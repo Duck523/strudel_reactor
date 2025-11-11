@@ -183,12 +183,12 @@ export default function StrudelDemo() {
                                 <div className="button-container">
                                     <nav>
                                         <br />
-                                        <StartStopButton OnPlay={handlePlay} OnStop={handleStop}/>
+                                        <StartStopButton OnPlay={handlePlay} OnStop={handleStop} />
                                         <div className="col-md-4">
-                                            <VolumeSlider value={volume} onChange={changeVolume}/>
+                                            <VolumeSlider value={volume} onChange={changeVolume} />
                                         </div>
                                         <div className="col-md-4">
-                                            <PickSounds values={instruments} onToggle={pickInstruments}/>
+                                            <PickSounds values={instruments} onToggle={pickInstruments} />
                                         </div>
                                     </nav>
 
@@ -197,7 +197,7 @@ export default function StrudelDemo() {
 
                                 </div>
 
-                                <div className="mt-4">
+                                <div className="">
                                     <D3VolumeChart data={[{ label: 'volume', value: volume }]} />
                                 </div>
                             </div>
