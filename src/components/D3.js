@@ -9,9 +9,9 @@ const D3VolumeChart = ({ data }) => {
     useEffect(() => {
         const svg = d3.select(svgRef.current);
 
-        const width = 200;
-        const height = 40;
-        const margin = { top: 20, right: 20, bottom: 40, left: 40 };
+        const width = 350;
+        const height = 400;
+        const margin = { top: 20, right: 20, bottom: 40, left: 10 };
 
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
@@ -24,7 +24,7 @@ const D3VolumeChart = ({ data }) => {
 
         const yScale = d3.scaleBand()
             .domain(data.map(d => d.label))
-            .range([0, innerWidth])
+            .range([0, innerHeight])
             .padding(0.2);
 
         svg.selectAll('.bar')
@@ -50,7 +50,7 @@ const D3VolumeChart = ({ data }) => {
     }, [data]);
 
     return (
-        <svg ref={svgRef} width={260} height={100}></svg>
+        <svg ref={svgRef} width={380} height={400}></svg>
     )
 }
 

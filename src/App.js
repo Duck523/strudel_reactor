@@ -173,31 +173,23 @@ export default function StrudelDemo() {
                         <div className="row col-md-8"></div>
 
                         <div className="row">
-                            <div className="col-md-8">
+                            <div className="col-md-8 no-padding">
                                 <div className="textarea-container">
                                     <PreprocessText value={songText} onChange={(e) => setSongText(e.target.value)} />
                                 </div>
                             </div>
 
-                            <div className="col-md-4">
+                            <div className="col-md-4 no-padding">
                                 <div className="button-container">
                                     <nav>
-                                        <br />
                                         <StartStopButton OnPlay={handlePlay} OnStop={handleStop} />
-                                        <div className="col-md-4">
-                                            <VolumeSlider value={volume} onChange={changeVolume} />
-                                        </div>
-                                        <div className="col-md-4">
-                                            <PickSounds values={instruments} onToggle={pickInstruments} />
-                                        </div>
+                                        <VolumeSlider value={volume} onChange={changeVolume} />
+                                         <PickSounds values={instruments} onToggle={pickInstruments} />
                                     </nav>
-
                                     <SelectTune value={tuneIndex} onChange={pickSong} />
-
-
                                 </div>
 
-                                <div className="">
+                                <div className="col-md-4 no-padding d-flex flex-column justify-content-start">
                                     <D3VolumeChart data={[{ label: 'volume', value: volume }]} />
                                 </div>
                             </div>
