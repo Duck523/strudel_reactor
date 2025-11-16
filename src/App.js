@@ -66,7 +66,7 @@ export default function StrudelDemo() {
     const [volume, setVolume] = useState(0.5);
     const changeVolume = (newVolume) => {
         setVolume(newVolume);
-
+        //find the masterGain in the strudle text and updates the value
         const newText = songText.replace(
             /const masterGain = [0-9.]+;/,
             `const masterGain = ${newVolume};`
@@ -75,6 +75,7 @@ export default function StrudelDemo() {
         setSongText(newText);
 
         if (globalEditor) {
+            //sets the code and with evaluate it starts playing again for the user
             globalEditor.setCode(newText);
             globalEditor.evaluate();
         }
@@ -169,6 +170,7 @@ export default function StrudelDemo() {
     }, [songText]);
 
 
+    //the return makes use of all the functions that have been made as well as some custom css styling that can be found in app.css 
     return (
         <div className="App">
             <div className="background">
@@ -176,7 +178,7 @@ export default function StrudelDemo() {
                     <h2>Strudel Editor</h2>
                     <div className="container-fluid">
                         <div className="row col-md-8"></div>
-
+                        
                         <div className="row">
                             <div className="col-md-8 no-padding">
                                 <div className="textarea-container">
