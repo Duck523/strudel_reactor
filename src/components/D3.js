@@ -36,36 +36,32 @@ const D3VolumeChart = ({ data }) => {
 
             svg.selectAll('.bar')
                 .data(data)
-                .join(
-                    enter => enter.append('rect')
-                        .attr('class', 'bar')
-                        .attr('x', margin.left)
-                        .attr('y', d => yScale(d.label) + margin.top)
-                        .attr('width', 0)
-                        .attr('height', yScale.bandwidth())
-                        .attr('fill', 'steelblue')
-                        .call(enter => enter.transition()
-                            //.duration(750)
-                            .attr('width', d => xScale(d.value))
-                        ),
-                    update => update.call(update => update.transition()
-                        //.duration(750)
-                        .attr('width', d => xScale(d.value))
-                    )
-                );
+                .enter()
+                .append('rect')
+                .attr('class', 'bar')
+                .attr('x', margin.left)
+                .attr('y', d => yScale(d.label) + margin.top)
+                .attr('width', 0)
+                .attr('height', yScale.bandwidth())
+                .attr('fill', 'steelblue');
 
             svg.append("text")
                 .attr("class", "percent-text")
+                .attr("fill", "white")
                 .attr("x", width / 2)
                 .attr("y", 60)
                 .attr("text-anchor", "middle")
                 .attr("font-size", "16px")
         }
 
+        svg.selectAll('.bar')
+            .data(data)
+            .transition()
+            .attr('width', d => xScale(d.value));
 
         const volumeVal = data[0].value;
         const percent = Math.round(volumeVal * 100);
-        svg.select(".percent-text").text(`${percent}%`);
+        svg.select(".percent-text").text(`Volume: ${percent}%`);
 
     }, [data]);
 

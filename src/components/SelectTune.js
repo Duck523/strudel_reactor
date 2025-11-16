@@ -1,5 +1,6 @@
 import { stranger_tune, song2} from "../tunes";
 import { useState } from "react";
+import './SelectTune.css';
 
 // the value from seclect the songs imported are added into a dictionary and then those dictionary 
 export function SelectTune({ value, onChange }) {
@@ -15,7 +16,7 @@ export function SelectTune({ value, onChange }) {
     
 
     return (
-        <select value={value} onChange={onChange}>
+        <select className="select-layout" value={value} onChange={onChange}>
             {options}
         </select>
 

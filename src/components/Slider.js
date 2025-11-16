@@ -12,7 +12,10 @@ export function VolumeSlider({ value, onChange }) {
         onChange(newVolume);
     }
 
-return (
-    <input type="range" min = "0" max = "100" value = { volume } onChange = {handleChange} />
+    return (
+        <div className="d-flex align-items-center">
+            <label id="volumeSlider" className="me-2">Adjust Volume: </label>
+            <input id="volumeSlider" type="range" min="0" max="100" value={volume} onChange={handleChange} />
+        </div>
     );
 }
