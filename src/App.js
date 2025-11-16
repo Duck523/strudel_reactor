@@ -74,7 +74,11 @@ export default function StrudelDemo() {
 
         setSongText(newText);
 
-        globalEditor.setCode(newText);
+        if (globalEditor) {
+            globalEditor.setCode(newText);
+            globalEditor.evaluate();
+        }
+        
 
     }
 
@@ -107,6 +111,7 @@ export default function StrudelDemo() {
             setSongText(newText);
             if (globalEditor) {
                 globalEditor.setCode(newText);
+                globalEditor.evaluate();
             }
 
             return newStatus;
